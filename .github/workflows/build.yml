@@ -1,0 +1,48 @@
+name: Build VST3 (Windows x86, Cubase 5 compatible)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout plugin source
+        uses: actions/checkout@v4
+
+      # Pin a JUCE release known to build cleanly with the VC++ toolset
+      # used here. Bump this deliberately, not automatically, and retest
+      # old-host loading whenever you do.
+      - name: Checkout JUCE
+        uses: actions/checkout@v4
+        with:
+          repository: juce-framework/JUCE
+          ref: 7.0.12
+          path: JUCE
+
+      - name: Configure (Win32 / x86, static runtime)
+        run: >
+          cmake -S . -B build
+          -A Win32
+          -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release --target GradientArcKnob_VST3
+
+      - name: Locate VST3 output
+        id: locate
+        shell: pwsh
+        run: |
+          $vst3 = Get-ChildItem -Path build -Recurse -Filter "*.vst3" | Select-Object -First 1
+          if (-not $vst3) { throw "No .vst3 output found" }
+          echo "path=$($vst3.FullName)" >> $env:GITHUB_OUTPUT
+
+      - name: Upload VST3 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GradientArcKnob-VST3-Win32
+          path: ${{ steps.locate.outputs.path }}
