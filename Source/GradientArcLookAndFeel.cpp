@@ -70,7 +70,7 @@ void GradientArcLookAndFeel::drawRotarySlider (juce::Graphics& g,
 
     // --- Centre readout ------------------------------------------------
     g.setColour (juce::Colours::white);
-    g.setFont (juce::Font (juce::FontOptions (radius * 0.42f, juce::Font::bold)));
+    g.setFont (juce::Font (radius * 0.42f, juce::Font::bold));
     const auto value = juce::jmap (sliderPosProportional, 0.0f, 1.0f, 0.0f, 100.0f);
     g.drawFittedText (juce::String (juce::roundToInt (value)),
                        bounds.toNearestInt(),
