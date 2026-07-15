@@ -7,7 +7,7 @@ GradientArcKnobAudioProcessorEditor::GradientArcKnobAudioProcessorEditor (Gradie
 
     titleLabel.setText ("GRADIENT ARC", juce::dontSendNotification);
     titleLabel.setJustificationType (juce::Justification::centred);
-    titleLabel.setFont (juce::Font (juce::FontOptions (16.0f, juce::Font::bold)));
+    titleLabel.setFont (juce::Font (16.0f, juce::Font::bold));
     titleLabel.setColour (juce::Label::textColourId, juce::Colours::white.withAlpha (0.7f));
     addAndMakeVisible (titleLabel);
 
